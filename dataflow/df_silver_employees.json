@@ -1,0 +1,39 @@
+{
+	"name": "df_silver_employees",
+	"properties": {
+		"folder": {
+			"name": "Silver"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_sql_bronze_employees",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          EmployeeID as string,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          Department as string,",
+				"          BirthDay as string,",
+				"          Gender as string,",
+				"          Salary as string,",
+				"          ManagerID as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     query: 'select EmployeeID, FirstName,\\r\\nISNULL(LastName,\\'n/a\\') as LastName,\\r\\nDepartment,BirthDay,\\r\\nGender,Salary,\\r\\nISNULL(ManagerID, 1) as ManagerID\\r\\nfrom [dbo].[Employees]',",
+				"     format: 'query') ~> source1"
+			]
+		}
+	}
+}
